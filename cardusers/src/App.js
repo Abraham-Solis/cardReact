@@ -91,80 +91,120 @@
 
 // export default App
 
-import { useState } from 'react'
+// import { useState } from 'react'
 
+
+// const App = () => {
+
+//   const [movieState, setMovieState] = useState({
+
+//     title: ' ',
+//     description: ' ',
+//     release: ' ',
+//     movie: {}
+//   })
+
+//   const handleInputChange = ({ target: { name, value } }) => {
+//     setMovieState({...movieState, [name]: value })
+//   }
+
+//   const handleFormSubmit = event => {
+//     event.preventDefault()
+//     console.log(movieState)
+//     setMovieState({
+//       ...movieState,
+//       movie: {
+//         title: movieState.title,
+//         description: movieState.description,
+//         release: movieState.release
+//       },
+//       title: ' ',
+//       description: ' ', 
+//       release: ' '
+      
+//     })
+//   }
+
+
+//   return (
+//     <>
+//       <form>
+//         <p>
+//           <label htmlFor="name">Title of Movie</label>
+//           <input
+//             type="text"
+//             name="title"
+//             value={movieState.title}
+//             onChange={handleInputChange} />
+//         </p>
+//         <p>
+//           <label htmlFor="description">description</label>
+//           <input
+//             type="text"
+//             name="description"
+//             value={movieState.description}
+//             onChange={handleInputChange} />
+//         </p>
+//         <p>
+//           <label htmlFor="release">Release Date</label>
+//           <input
+//             type="text"
+//             name="release"
+//             value={movieState.release}
+//             onChange={handleInputChange} />
+//         </p>
+//         <p>
+//           <button onClick={handleFormSubmit}>Submit</button>
+//         </p>
+//       </form>
+//       <div>
+//         <h1>Title: {movieState.movie.title}</h1>
+//         <h1>Description: {movieState.movie.description}</h1>
+//         <h1> Release Date: {movieState.movie.release}</h1>
+//       </div>
+//     </>
+
+//   )}
+
+
+// export default App
+
+
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const App = () => {
 
   const [movieState, setMovieState] = useState({
-
-    title: ' ',
-    description: ' ',
-    release: ' ',
     movie: {}
   })
 
-  const handleInputChange = ({ target: { name, value } }) => {
-    setMovieState({...movieState, [name]: value })
-  }
-
-  const handleFormSubmit = event => {
-    event.preventDefault()
-    console.log(movieState)
-    setMovieState({
-      ...movieState,
-      movie: {
-        title: movieState.title,
-        description: movieState.description,
-        release: movieState.release
-      },
-      title: ' ',
-      description: ' ', 
-      release: ' '
-      
-    })
-  }
-
+  useEffect(() => {
+    axios.get('http://www.omdbapi.com/?apikey=trilogy&t=Kung+Fu+Panda')
+      .then(({ data: movie }) => {
+        console.log(movie)
+        setMovieState({ ...movieState, movie })
+      })
+      .catch(err => console.error(err))
+  }, [])
 
   return (
     <>
-      <form>
-        <p>
-          <label htmlFor="name">Title of Movie</label>
-          <input
-            type="text"
-            name="title"
-            value={movieState.title}
-            onChange={handleInputChange} />
-        </p>
-        <p>
-          <label htmlFor="description">description</label>
-          <input
-            type="text"
-            name="description"
-            value={movieState.description}
-            onChange={handleInputChange} />
-        </p>
-        <p>
-          <label htmlFor="release">Release Date</label>
-          <input
-            type="text"
-            name="release"
-            value={movieState.release}
-            onChange={handleInputChange} />
-        </p>
-        <p>
-          <button onClick={handleFormSubmit}>Submit</button>
-        </p>
-      </form>
-      <div>
-        <h1>Title: {movieState.movie.title}</h1>
-        <h1>Description: {movieState.movie.description}</h1>
-        <h1> Release Date: {movieState.movie.release}</h1>
-      </div>
+      {
+        movieState.movie.Title ? (
+          <>
+            <h1>Title: {movieState.movie.Title}</h1>
+            <h1>Release Date: {movieState.movie.Released}</h1>
+            <h1>Rating: {movieState.movie.Rated}</h1>
+            <h1>Plot: {movieState.movie.Plot}</h1>
+            <h1>MetaScore:{movieState.movie.Metascore}</h1>
+            <img src = {movieState.movie.Poster}></img>
+
+          </>
+        ) : null
+      }
     </>
-
-  )}
-
+  )
+}
 
 export default App
